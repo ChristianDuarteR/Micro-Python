@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: global_invoice_db
+    restart: always
+    environment:
+      POSTGRES_DB: global_invoice
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - global-invoice-net
+
+volumes:
+  postgres_data:
+
+networks:
+  global-invoice-net:
+    external: true
