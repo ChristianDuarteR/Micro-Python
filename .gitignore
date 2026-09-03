@@ -21,3 +21,8 @@ eggs/
 # Logs y variables de entorno
 *.log
 .env
+
+# Tests / cobertura
+.coverage
+htmlcov/
+.pytest_cache/
