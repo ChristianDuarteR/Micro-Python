@@ -9,6 +9,7 @@ on:
     branches:
       - main
       - develop
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
@@ -70,3 +71,16 @@ jobs:
       - name: Stop container
         if: always()
         run: docker stop global-invoice-metrics-ci || true
+
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
