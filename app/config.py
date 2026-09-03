@@ -8,7 +8,10 @@ class Settings(BaseSettings):
 
     app_name: str = "global-invoice-metrics"
     port: int = 5000
-    cors_origins: str = "*"
+    cors_origins: str = (
+        "https://global-invoice-virid.vercel.app,"
+        "https://micro-java-core.onrender.com"
+    )
 
     database_url: str = (
         "postgresql://postgres:postgres_password@postgres-db:5432/global_invoice"

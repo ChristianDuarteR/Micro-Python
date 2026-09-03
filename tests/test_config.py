@@ -7,3 +7,10 @@ def test_cors_star_and_list():
         "http://a",
         "http://b",
     ]
+
+
+def test_cors_defaults_to_deployed_clients():
+    assert Settings().cors_origin_list == [
+        "https://global-invoice-virid.vercel.app",
+        "https://micro-java-core.onrender.com",
+    ]
