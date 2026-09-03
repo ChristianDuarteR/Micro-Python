@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run tests
+        run: python -m pytest
+
+  container:
+    name: Container build and smoke test
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build --tag global-invoice-metrics:${{ github.sha }} .
+
+      - name: Start container
+        run: |
+          docker run --detach --rm \
+            --name global-invoice-metrics-ci \
+            --publish 5000:5000 \
+            --env DATABASE_URL=postgresql://postgres:postgres@localhost:5432/global_invoice \
+            --env JWT_SECRET=ci-secret \
+            --env INTERNAL_API_KEY=ci-internal-key \
+            global-invoice-metrics:${{ github.sha }}
+
+      - name: Check health endpoint
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent http://localhost:5000/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs global-invoice-metrics-ci
+          exit 1
+
+      - name: Stop container
+        if: always()
+        run: docker stop global-invoice-metrics-ci || true
