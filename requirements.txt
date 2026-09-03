@@ -1,3 +1,9 @@
-flask
-psycopg2-binary
+fastapi
+uvicorn[standard]
 sqlalchemy
+psycopg2-binary
+pydantic-settings
+python-jose[cryptography]
+pytest
+pytest-cov
+httpx

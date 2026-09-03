@@ -1,10 +1,6 @@
-from flask import Flask, jsonify
+from app.main import app
 
-app = Flask(__name__)
+if __name__ == "__main__":
+    import uvicorn
 
-@app.route('/', methods=['GET'])
-def index():
-    return jsonify({"status": "ok", "message": "Microservicio Flask listo"})
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=5000)
