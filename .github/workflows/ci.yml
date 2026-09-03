@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - develop
-  pull_request_target:
+  pull_request:
     branches:
       - main
       - develop
@@ -13,7 +13,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
 
 jobs:
   test:
@@ -22,10 +21,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@0b7f8abb1508181956e8e162db938b08d1ad56ae # v5.3.0
         with:
           python-version: "3.11"
           cache: pip
@@ -43,7 +42,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Build image
         run: docker build --tag global-invoice-metrics:${{ github.sha }} .
@@ -78,12 +77,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v3
+        uses: SonarSource/sonarqube-scan-action@bfd4e069123896500ecdd0d4d23ff1e4d3a049d5 # v3.1.0
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.MICRO_PYTHON }}
