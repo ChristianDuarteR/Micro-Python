@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   python-metrics-ms:
@@ -6,10 +6,13 @@ services:
     container_name: python_metrics_ms
     ports:
       - "5000:5000"
+    env_file:
+      - .env
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres_password@postgres-db:5432/global_invoice
+      DATABASE_URL: postgresql://postgres:postgres_password@postgres-db:5432/global_invoice
     networks:
       - global-invoice-net
+    restart: unless-stopped
 
 networks:
   global-invoice-net:
